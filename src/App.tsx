@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import MapComponent from './component/MapComponents';
+import FilterComponent from './component/FilterComponent';
+import TripDetails from './component/TripDetails';
+import LoadingIndicator from './component/LoadingIndicator';
+import ErrorBoundary from './component/ErrorBoundary';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
+import { Trip } from './store/tripSlice';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+    const loading = useSelector((state: RootState) => state.trips.loading);
+    const trips = useSelector((state: RootState) => state.trips.trips);
+    const selectedTrip: Trip | null = trips[0] || null;
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    return (
+        <ErrorBoundary>
+            <div>
+                <FilterComponent allTrips={trips} />
+                {loading ? <LoadingIndicator /> : <MapComponent/>}
+                {selectedTrip ? <TripDetails trip={selectedTrip} /> : <p>No trip selected.</p>}
+            </div>
+        </ErrorBoundary>
+    );
+};
 
-export default App
+export default App;

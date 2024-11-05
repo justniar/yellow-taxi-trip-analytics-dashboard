@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Trip {
+export interface Trip {
     id: string;
     pickupLocation: [number, number];
     dropoffLocation: [number, number];
